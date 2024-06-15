@@ -26,7 +26,7 @@ const memoizedFactorial = memoized(function (n) {
   return n * memoizedFactorial(n - 1);
 });
 
-// -- 이하 테스트용 (이 부분은 제출 대상 아님) --
+// -- 이하 테스트용 코드 --
 const TestBed = [3, 5, 7];
 function test(fn) {
   const fname = fn.name || 'memoizedFactorial';
