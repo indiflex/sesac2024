@@ -1,0 +1,14 @@
+{
+  "name": "jadejs",
+  "version": "0.0.1-beta1",
+  "description": "jade js training",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "JS"
+  ],
+  "author": "Jade",
+  "license": "ISC"
+}
