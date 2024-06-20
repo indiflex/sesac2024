@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>수강신청</title>
+</head>
+
+<body>
+  <button id="kor">국어</button>
+  <label for="kor" id="korWeek">XX</label>
+  <button id="math">수학</button>
+  <label for="math" id="mathWeek">YY</label>
+
+  <script>
+    kor.addEventListener('click', evt => {
+      korWeek.innerHTML = '월';
+    });
+
+    math.addEventListener('click', evt => {
+      mathWeek.innerText = '화';
+    });
+  </script>
+</body>
+
+</html>

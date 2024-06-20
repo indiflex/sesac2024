@@ -73,3 +73,19 @@ useEffect(() => {
     console.log('🚀  p:', p);
   })();
 }, []);
+
+const aff = () => () => {}; // curring
+
+function addTax1(resolve) {
+  return function (price) {
+    return resolve(price * 1.1);
+  };
+}
+
+const addTax2 = resolve => {
+  return function (price) {
+    return resolve(price * 1.1);
+  };
+};
+
+const curryingAddTax = resolve => price => resolve(price * 1.1);
