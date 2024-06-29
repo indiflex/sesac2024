@@ -263,3 +263,30 @@ assert.deepStrictEqual(
   range(1, 150, 3),
   Array.from({ length: 50 }, (_, i) => i * 3 + 1)
 );
+
+console.log('***************************');
+const keyPairOn_2 = (arr, n) => {
+  for (let i = 0; i < arr.length; i += 1)
+    for (let j = 0; j < arr.length; j += 1) {
+      if (arr[i] + arr[j] === n) return [i, j];
+    }
+};
+
+const keyPair = (arr, n) => {
+  const val_idx = {}; // {key: index}
+  for (let i = 0; i < arr.length; i += 1) {
+    const val = arr[i];
+    if (val_idx[val]) return [val_idx[val], i];
+
+    val_idx[n - val] ??= i;
+    // console.log('val_idx=', val_idx);
+  }
+};
+
+// console.log('***', keyPair([1, 3, 3, 4, 5], 7));
+
+assert.deepStrictEqual(keyPair([1, 3, 3, 4, 5], 7), [1, 3]);
+assert.deepStrictEqual(keyPair([1, 3, 4, 5], 7), [1, 2]);
+assert.deepStrictEqual(keyPair([1, 4, 45, 6, 10, 8], 16), [3, 4]);
+assert.deepStrictEqual(keyPair([1, 2, 4, 3, 6], 10), [2, 4]);
+assert.deepStrictEqual(keyPair([1, 2, 3, 4, 5, 7], 9), [3, 4]);
