@@ -82,3 +82,46 @@ console.log('x=', itStr.next());
 console.log('x=', itStr.next());
 console.log('x=', itStr.next());
 console.log('x=', itStr.next());
+
+const serve = {
+  worker: 'ABCDEFG',
+  tables: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+  [Symbol.iterator]() {
+    let i = 0;
+    const { worker, tables } = this;
+    // const worker = this.worker;
+    // const tables = this.tables;
+    // console.log('🚀  this:', this);
+    return {
+      next: () => ({
+        value: `${worker[i % worker.length]}-t${tables[i % tables.length]}`,
+        done: ((i += 1), i > 1000),
+      }),
+    };
+  },
+};
+
+const workerTable = serve[Symbol.iterator]();
+// console.log('xxxxxxx=', [...serve]);
+return;
+console.log('🚀  workerTable:', workerTable.next());
+console.log('🚀  workerTable:', workerTable.next());
+console.log('🚀  workerTable:', workerTable.next());
+console.log('🚀  workerTable:', workerTable.next());
+console.log('🚀  workerTable:', workerTable.next());
+console.log('🚀  workerTable:', workerTable.next());
+console.log('🚀  workerTable:', workerTable.next());
+console.log('🚀  workerTable:', workerTable.next());
+console.log('🚀  workerTable:', workerTable.next());
+console.log('🚀  workerTable:', workerTable.next());
+console.log('🚀  workerTable:', workerTable.next());
+console.log('🚀  workerTable:', workerTable.next());
+console.log('🚀  workerTable:', workerTable.next());
+console.log('🚀  workerTable:', workerTable.next());
+console.log('🚀  workerTable:', workerTable.next());
+console.log('🚀  workerTable:', workerTable.next());
+console.log('🚀  workerTable:', workerTable.next());
+console.log('🚀  workerTable:', workerTable.next());
+console.log('🚀  workerTable:', workerTable.next());
+console.log('🚀  workerTable:', workerTable.next());
+console.log('🚀  workerTable:', workerTable.next());

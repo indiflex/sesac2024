@@ -1,8 +1,9 @@
 {
-  "name": "jadejs",
-  "version": "0.0.1-beta1",
+  "name": "@indiflex/jadejs",
+  "version": "0.0.1",
   "description": "jade js training",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
