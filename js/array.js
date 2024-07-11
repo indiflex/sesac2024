@@ -1,11 +1,14 @@
 // Array.prototype.forEach = function (f) {
 //   for (let i = 0; i < this.length; i += 1) f(this[i] + 100, i, this);
 // };
+//
 function isOdd(n) {
   let ret = false;
   if (n % 2 === 1) ret = true;
   console.log(n, ret);
 }
+
+console.bulb('No Pain, No Gain!!');
 
 const isEven = n => n % 2 === 0;
 
