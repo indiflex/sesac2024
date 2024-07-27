@@ -1,1 +1,0 @@
-const shared = 'Cher';
