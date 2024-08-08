@@ -1,7 +1,8 @@
-import { FormEvent, useRef } from 'react';
+import { FormEvent, RefObject, useRef, useState } from 'react';
 import { Session } from '../App';
-import Login from './Login';
+import Login, { LoginImperativeHandler } from './Login';
 import Profile from './Profile';
+import { FaPlus, FaRedo } from 'react-icons/fa';
 
 type Props = {
   session: Session;
@@ -9,7 +10,8 @@ type Props = {
   login: (id: number, name: string) => void;
   removeCartItem: (itemId: number) => void;
   addCartItem: (name: string, price: number) => void;
-  addBtnRef: React.RefObject<HTMLButtonElement>;
+  addBtnRef: RefObject<HTMLButtonElement>;
+  loginFnRef: RefObject<LoginImperativeHandler>;
 };
 
 // const My = forwardRef(
@@ -24,7 +26,10 @@ const My = ({
   removeCartItem,
   addCartItem,
   addBtnRef,
+  loginFnRef,
 }: Props) => {
+  const [isEditing, setIsEditing] = useState(false);
+
   const nameRef = useRef<HTMLInputElement>(null);
   const priceRef = useRef<HTMLInputElement>(null);
 
@@ -47,6 +52,10 @@ const My = ({
     }
 
     addCartItem(name, +price);
+
+    nameRef.current.value = '';
+    priceRef.current.value = '0';
+    setIsEditing(false);
   };
 
   const focus = (ref: React.RefObject<HTMLInputElement>) => {
@@ -58,7 +67,7 @@ const My = ({
       <ul>
         {session.cart.map((item) => (
           <li key={item.id}>
-            {item.name}
+            <small className='text-gray-300'>{item.id}.</small> {item.name}
             <small className='text-gray-500'>
               ({item.price.toLocaleString()})
             </small>
@@ -72,23 +81,33 @@ const My = ({
         ))}
       </ul>
 
-      <form onSubmit={addItem} className='flex gap-2 border p-2'>
-        <input
-          type='text'
-          ref={nameRef}
-          placeholder='name...'
-          className='border border-slate-500 focus:border-blue-300'
-        />
-        <input type='number' ref={priceRef} placeholder='price...' />
-        <button ref={addBtnRef} type='submit' className='btn'>
-          +
+      {isEditing ? (
+        <form onSubmit={addItem} className='mb-3 flex gap-2 border p-2'>
+          <input
+            type='text'
+            ref={nameRef}
+            placeholder='name...'
+            className='border border-slate-500 focus:border-blue-300'
+          />
+          <input type='number' ref={priceRef} placeholder='price...' />
+          <button onClick={() => setIsEditing(false)} className='btn'>
+            <FaRedo />
+          </button>
+          <button ref={addBtnRef} type='submit' className='btn-primary'>
+            <FaPlus />
+          </button>
+        </form>
+      ) : (
+        <button onClick={() => setIsEditing(true)} className='btn mb-3'>
+          +추가
         </button>
-      </form>
+      )}
 
+      <hr />
       {session.loginUser ? (
         <Profile session={session} logout={logout} />
       ) : (
-        <Login login={login} />
+        <Login login={login} ref={loginFnRef} />
       )}
     </div>
   );

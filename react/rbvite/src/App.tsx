@@ -1,8 +1,9 @@
-import { useRef, useState } from 'react';
+import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 import './App.css';
 import Hello from './components/Hello';
 import My from './components/My';
 import { flushSync } from 'react-dom';
+import { LoginImperativeHandler } from './components/Login';
 
 export type Session = {
   loginUser?: { id: number; name: string } | null;
@@ -10,7 +11,7 @@ export type Session = {
 };
 
 const SampleSession: Session = {
-  loginUser: { id: 1, name: 'Hong' },
+  // loginUser: { id: 1, name: 'Hong' },
   cart: [
     { id: 100, name: '라면', price: 3000 },
     { id: 101, name: '컵라면', price: 2000 },
@@ -38,18 +39,40 @@ const useCount = (initValue: number) => {
 //   return [obj.state, obj.setState];
 // }
 
+type ChildHandler = {
+  f: (s: string) => void;
+};
+
+const ChildComponent = forwardRef(({ age }: { age: number }, ref) => {
+  const handler = {
+    f(s: string) {
+      console.log('s=', s);
+    },
+  };
+  useImperativeHandle(ref, () => handler);
+  return <div className='border'>age: {age}</div>;
+});
+
 function App() {
   const { count, setCount } = useCount(0);
   const [session, setSession] = useState<Session>(SampleSession);
 
-  const addBtnRef = useRef<HTMLButtonElement>();
+  const addBtnRef = useRef<HTMLButtonElement>(null);
+  const childFnRef = useRef<ChildHandler>(null);
+  const loginFnRef = useRef<LoginImperativeHandler>(null);
 
   const logout = () => {
     setSession({ ...session, loginUser: null });
   };
 
-  const login = (id: number, name: string) =>
+  const login = (id: number, name: string) => {
+    if (!name) {
+      alert('Input the name!');
+      loginFnRef.current?.focusName();
+      return;
+    }
     setSession({ ...session, loginUser: { id, name } });
+  };
 
   const removeCartItem = (itemId: number) => {
     setSession({
@@ -58,10 +81,21 @@ function App() {
     });
   };
 
-  const addCartItem = (name: string, price: number) => {};
+  const addCartItem = (name: string, price: number) => {
+    const id = Math.max(...session.cart.map((item) => item.id), 0) + 1;
+    setSession({
+      ...session,
+      cart: [...session.cart, { id, name, price }],
+    });
+  };
 
   return (
     <>
+      <ChildComponent ref={childFnRef} age={count} />
+      <button onClick={() => childFnRef.current?.f('XXX')} className='btn'>
+        ChildFn
+      </button>
+
       <Hello name='Jade' age={count}>
         <small>Hello Children</small>
       </Hello>
@@ -74,6 +108,7 @@ function App() {
         removeCartItem={removeCartItem}
         addCartItem={addCartItem}
         addBtnRef={addBtnRef}
+        loginFnRef={loginFnRef}
       />
 
       <button

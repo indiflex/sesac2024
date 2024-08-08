@@ -1,9 +1,14 @@
-import { useRef } from 'react';
+import { forwardRef, useImperativeHandle, useRef } from 'react';
 
 type Props = {
   login: (id: number, name: string) => void;
 };
-export default function Login({ login }: Props) {
+
+export type LoginImperativeHandler = {
+  focusName: () => void;
+};
+
+const Login = forwardRef(({ login }: Props, ref) => {
   // const [id, setId] = useState(0);
   // const [name, setName] = useState('');
   // console.log('id, name ==>', id, name);
@@ -11,6 +16,12 @@ export default function Login({ login }: Props) {
   const idRef = useRef<HTMLInputElement>(null);
   const nameRef = useRef<HTMLInputElement>(null);
   console.log('id, name ==>', idRef.current?.value, nameRef.current?.value);
+
+  useImperativeHandle(ref, () => ({
+    focusName() {
+      nameRef.current?.focus();
+    },
+  }));
 
   const submitHandle = (evt: React.FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
@@ -27,6 +38,7 @@ export default function Login({ login }: Props) {
           type='number'
           id='id'
           ref={idRef}
+          defaultValue={100}
           // onChange={(e) => setId(+e.currentTarget.value)}
           // onChange={(e) =>
           //   console.log(
@@ -51,4 +63,6 @@ export default function Login({ login }: Props) {
       </form>
     </div>
   );
-}
+});
+
+export default Login;
