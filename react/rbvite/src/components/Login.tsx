@@ -1,21 +1,23 @@
-import { forwardRef, useImperativeHandle, useRef } from 'react';
-
-type Props = {
-  login: (id: number, name: string) => void;
-};
+import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
+import { useCounter } from '../hooks/counter-context';
+import { useSession } from '../hooks/session-context';
 
 export type LoginImperativeHandler = {
   focusName: () => void;
 };
 
-const Login = forwardRef(({ login }: Props, ref) => {
+const Login = forwardRef((_, ref) => {
   // const [id, setId] = useState(0);
   // const [name, setName] = useState('');
   // console.log('id, name ==>', id, name);
 
+  const { login } = useSession();
+
   const idRef = useRef<HTMLInputElement>(null);
   const nameRef = useRef<HTMLInputElement>(null);
-  console.log('id, name ==>', idRef.current?.value, nameRef.current?.value);
+  // console.log('id, name ==>', idRef.current?.value, nameRef.current?.value);
+
+  const { plusCount, minusCount } = useCounter();
 
   useImperativeHandle(ref, () => ({
     focusName() {
@@ -27,8 +29,28 @@ const Login = forwardRef(({ login }: Props, ref) => {
     evt.preventDefault();
     const id = idRef.current?.value ?? 0;
     const name = nameRef.current?.value ?? '';
+    if (!name) {
+      alert('Input the name!');
+      nameRef.current?.focus();
+      return;
+    }
     login(+id, name);
+    minusCount();
   };
+
+  // useEffect(() => {
+  //   plusCount();
+  //   const intl = setInterval(() => console.log('Login.setInterval!!'), 1000);
+
+  //   return () => clearInterval(intl);
+  // }, []);
+
+  useEffect(() => {
+    plusCount();
+    const timer = setTimeout(() => console.log('Login.setTimeout!!'), 1000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <div className='border-2'>

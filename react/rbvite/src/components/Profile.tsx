@@ -1,11 +1,10 @@
-import { Session } from '../App';
+import { useSession } from '../hooks/session-context';
 
-type Props = {
-  session: Session;
-  logout: () => void;
-};
-
-export default function Profile({ session: { loginUser }, logout }: Props) {
+export default function Profile() {
+  const {
+    session: { loginUser },
+    logout,
+  } = useSession();
   return (
     <>
       <h1>{loginUser?.name}</h1>
