@@ -1,6 +1,7 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 import { useCounter } from '../hooks/counter-context';
 import { useSession } from '../hooks/session-context';
+import useTimer from '../hooks/timer-hook';
 
 export type LoginImperativeHandler = {
   focusName: () => void;
@@ -38,19 +39,23 @@ const Login = forwardRef((_, ref) => {
     minusCount();
   };
 
-  // useEffect(() => {
-  //   plusCount();
-  //   const intl = setInterval(() => console.log('Login.setInterval!!'), 1000);
-
-  //   return () => clearInterval(intl);
-  // }, []);
-
   useEffect(() => {
     plusCount();
-    const timer = setTimeout(() => console.log('Login.setTimeout!!'), 1000);
+    //   const intl = setInterval(() => console.log('Login.setInterval!!'), 1000);
 
-    return () => clearTimeout(timer);
+    //   return () => clearInterval(intl);
   }, []);
+
+  const { useTimeout } = useTimer();
+
+  useTimeout(() => console.log('Login.setTimeout!!'), 1000);
+
+  // useEffect(() => {
+  //   plusCount();
+  //   const timer = setTimeout(() => console.log('Login.setTimeout!!'), 1000);
+
+  //   return () => clearTimeout(timer);
+  // }, []);
 
   return (
     <div className='border-2'>

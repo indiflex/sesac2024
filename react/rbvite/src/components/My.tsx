@@ -1,8 +1,9 @@
 import { FormEvent, RefObject, useEffect, useRef, useState } from 'react';
 import Login, { LoginImperativeHandler } from './Login';
 import Profile from './Profile';
-import { FaCheck, FaPlus, FaRedo, FaSave } from 'react-icons/fa';
+import { FaCheck, FaPlus, FaRedo } from 'react-icons/fa';
 import { useSession } from '../hooks/session-context';
+import useFetch from '../hooks/fetch-hook';
 
 type Props = {
   loginFnRef: RefObject<LoginImperativeHandler>;
@@ -12,6 +13,13 @@ type Item = {
   id: number;
   name: string;
   price: number;
+};
+
+export type User = {
+  id: number;
+  name: string;
+  username: string;
+  email: string;
 };
 
 // const My = forwardRef(
@@ -28,6 +36,8 @@ const My = ({ loginFnRef }: Props) => {
 
   const nameRef = useRef<HTMLInputElement>(null);
   const priceRef = useRef<HTMLInputElement>(null);
+
+  const users = useFetch<User[]>('https://jsonplaceholder.typicode.com/users');
 
   const checkDirty = () => {
     if (!editingItem || !nameRef.current || !priceRef.current) return;
@@ -85,6 +95,9 @@ const My = ({ loginFnRef }: Props) => {
 
   return (
     <div className='flex flex-col border border-red-300 p-1'>
+      <h1>
+        users: {users?.length} - {users?.[0].username}
+      </h1>
       <ul>
         {session.cart.map((item) => (
           <li key={item.id}>
