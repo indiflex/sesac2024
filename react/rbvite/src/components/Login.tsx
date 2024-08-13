@@ -26,6 +26,10 @@ const Login = forwardRef((_, ref) => {
     },
   }));
 
+  useEffect(() => {
+    console.log('fnnnnnnnn!!');
+  }, [login]);
+
   const submitHandle = (evt: React.FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
     const id = idRef.current?.value ?? 0;
@@ -88,6 +92,15 @@ const Login = forwardRef((_, ref) => {
           SignIn
         </button>
       </form>
+
+      <div className='flex justify-center gap-3'>
+        <button onClick={() => plusCount(3)} className='btn'>
+          +
+        </button>
+        <button onClick={() => minusCount(3)} className='btn'>
+          -
+        </button>
+      </div>
     </div>
   );
 });

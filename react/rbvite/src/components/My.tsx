@@ -1,4 +1,12 @@
-import { FormEvent, RefObject, useEffect, useRef, useState } from 'react';
+import {
+  FormEvent,
+  RefObject,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import Login, { LoginImperativeHandler } from './Login';
 import Profile from './Profile';
 import { FaCheck, FaPlus, FaRedo } from 'react-icons/fa';
@@ -33,6 +41,20 @@ const My = ({ loginFnRef }: Props) => {
   // const [isEditing, setIsEditing] = useState(false);
   const [editingItem, setEditingItem] = useState<Item | null>(null);
   const [hasDirty, setDirty] = useState(false);
+  const [ulHeight, setUlHeight] = useState(0);
+
+  // const ulCbRef = (node: HTMLUListElement) => {
+  //   console.log('node11>>>', node, node?.clientHeight);
+  //   setUlHeight(node?.clientHeight);
+  // };
+
+  const ulCbRef = useCallback(
+    (node: HTMLUListElement) => {
+      console.log('node22>>>', node, node?.clientHeight, session.cart);
+      setUlHeight(node?.clientHeight);
+    },
+    [session.cart]
+  );
 
   const nameRef = useRef<HTMLInputElement>(null);
   const priceRef = useRef<HTMLInputElement>(null);
@@ -80,10 +102,10 @@ const My = ({ loginFnRef }: Props) => {
     if (ref.current) ref.current.focus();
   };
 
-  const setEditing = (item: Item) => {
+  const setEditing = useCallback((item: Item) => {
     // setIsEditing(true);
     setEditingItem(item);
-  };
+  }, []);
 
   useEffect(() => {
     if (editingItem) {
@@ -93,12 +115,18 @@ const My = ({ loginFnRef }: Props) => {
     }
   }, [editingItem]);
 
+  const totalPrice = useMemo(
+    () => session.cart.reduce((acc, item) => acc + item.price, 0),
+    [session.cart]
+  );
+
   return (
     <div className='flex flex-col border border-red-300 p-1'>
       <h1>
-        users: {users?.length} - {users?.[0].username}
+        users: {users?.length} - {users?.[0].username}, totalPrice:
+        {totalPrice.toLocaleString()}, ulHeight: {ulHeight}
       </h1>
-      <ul>
+      <ul ref={ulCbRef}>
         {session.cart.map((item) => (
           <li key={item.id}>
             <small className='text-gray-300'>{item.id}.</small>

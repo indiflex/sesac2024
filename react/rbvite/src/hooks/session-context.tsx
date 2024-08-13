@@ -1,4 +1,10 @@
-import { createContext, PropsWithChildren, useContext, useState } from 'react';
+import {
+  createContext,
+  PropsWithChildren,
+  useCallback,
+  useContext,
+  useState,
+} from 'react';
 
 const SampleSession = {
   loginUser: null,
@@ -35,39 +41,42 @@ const SessionContext = createContext<SessionContextProps>(defaultSession);
 export const SessionProvider = ({ children }: PropsWithChildren) => {
   const [session, setSession] = useState<Session>(SampleSession);
 
-  const logout = () => {
+  const logout = useCallback(() => {
     setSession({ ...session, loginUser: null });
-  };
+  }, []);
 
-  const login = (id: number, name: string) => {
+  const login = useCallback((id: number, name: string) => {
     setSession({ ...session, loginUser: { id, name } });
-  };
+  }, []);
 
-  const removeCartItem = (itemId: number) => {
+  const removeCartItem = useCallback((itemId: number) => {
     setSession({
       ...session,
       cart: session.cart.filter((item) => item.id !== itemId),
     });
-  };
+  }, []);
 
-  const saveCartItem = (id: number, name: string, price: number) => {
-    if (id !== 0) {
-      setSession({
-        ...session,
-        cart: [
-          ...session.cart.map((item) =>
-            item.id === id ? { id, name, price } : item
-          ),
-        ],
-      });
-    } else {
-      id = Math.max(...session.cart.map((item) => item.id), 0) + 1;
-      setSession({
-        ...session,
-        cart: [...session.cart, { id, name, price }],
-      });
-    }
-  };
+  const saveCartItem = useCallback(
+    (id: number, name: string, price: number) => {
+      if (id !== 0) {
+        setSession({
+          ...session,
+          cart: [
+            ...session.cart.map((item) =>
+              item.id === id ? { id, name, price } : item
+            ),
+          ],
+        });
+      } else {
+        id = Math.max(...session.cart.map((item) => item.id), 0) + 1;
+        setSession({
+          ...session,
+          cart: [...session.cart, { id, name, price }],
+        });
+      }
+    },
+    []
+  );
 
   return (
     <SessionContext.Provider

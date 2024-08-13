@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useState } from 'react';
+import { ReactNode, useEffect, useMemo, useReducer, useState } from 'react';
 import { useCounter } from '../hooks/counter-context';
 import useFetch from '../hooks/fetch-hook';
 import { User } from './My';
@@ -17,7 +17,8 @@ export type Post = {
 };
 
 export default function Hello({ name, children }: Props) {
-  const [x, setX] = useState(10);
+  // const [x, setX] = useState(10);
+  const [x, plusX] = useReducer((preX) => preX + 1, 10);
   const { count: user } = useCounter();
   const [userId, setUserId] = useState('');
   // const [userInfo, setUserInfo] = useState<User>();
@@ -31,6 +32,10 @@ export default function Hello({ name, children }: Props) {
   const posts = useFetch<Post[]>(
     `https://jsonplaceholder.typicode.com/posts?userId=2`
   );
+  const postCnt = useMemo(() => {
+    console.log('ppppppppp>>', posts?.length);
+    return posts?.length;
+  }, [posts]);
 
   // console.log('🚀  posts:', posts);
 
@@ -56,22 +61,26 @@ export default function Hello({ name, children }: Props) {
 
   let primitive = 123;
   useEffect(() => {
-    // console.log('primitive>> ' + primitive);
+    console.log('primitive>> ' + primitive);
     return () => console.log('정리!');
   }, [primitive]);
 
-  const array = [1, 2, 3];
+  const array = useMemo(() => [1, 2, 3], []);
   useEffect(() => {
-    // console.log('effect Array!!!');
+    console.log('effect Array!!!');
   }, [array]);
+
+  const totArr = useMemo(() => array.reduce((acc, a) => acc + a, 0), []);
+  // console.log('🚀  totArr:', totArr);
 
   return (
     <>
       <h2>
-        Hello, {name} ({user}+{x}) : 게시글 수는 {posts?.length}
+        Hello, {name} ({user}+{x}) : 게시글 수는 {postCnt} :: {totArr}
       </h2>
       {children}
-      <button onClick={() => setX((p) => p + 1)} className='btn-primary'>
+      {/* <button onClick={() => setX(x => x + 1)} className='btn-primary'> */}
+      <button onClick={plusX} className='btn-primary'>
         XXX
       </button>
 
