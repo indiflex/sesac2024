@@ -3,7 +3,7 @@ import {
   PropsWithChildren,
   useCallback,
   useContext,
-  useState,
+  useReducer,
 } from 'react';
 
 const SampleSession = {
@@ -15,9 +15,11 @@ const SampleSession = {
   ],
 };
 
+type LoginUser = { id: number; name: string } | null;
+type Cart = typeof SampleSession.cart;
 type Session = {
-  loginUser: { id: number; name: string } | null;
-  cart: typeof SampleSession.cart;
+  loginUser: LoginUser;
+  cart: Cart;
 };
 
 type SessionContextProps = {
@@ -36,46 +38,76 @@ const defaultSession: SessionContextProps = {
   removeCartItem: () => {},
 };
 
+type Reducer =
+  | { type: 'logout'; payload: null }
+  | { type: 'login'; payload: LoginUser }
+  | { type: 'removeCartItem'; payload: number }
+  | { type: 'saveCartItem'; payload: Cart };
+
+const reducer = (session: Session, { type, payload }: Reducer) => {
+  switch (type) {
+    case 'logout':
+      return { ...session, loginUser: null };
+    case 'login':
+      return { ...session, loginUser: payload };
+    case 'removeCartItem':
+      return {
+        ...session,
+        cart: session.cart.filter((item) => item.id !== payload),
+      };
+    case 'saveCartItem':
+      console.log('🚀  payload:', payload);
+
+      return {
+        ...session,
+        cart: payload,
+      };
+    default:
+      return session; // bailout(skip)
+  }
+  return session;
+};
+
 const SessionContext = createContext<SessionContextProps>(defaultSession);
 
 export const SessionProvider = ({ children }: PropsWithChildren) => {
-  const [session, setSession] = useState<Session>(SampleSession);
+  // const [session, setSession] = useState<Session>(SampleSession);
+  const [session, dispatch] = useReducer(reducer, SampleSession);
 
   const logout = useCallback(() => {
-    setSession({ ...session, loginUser: null });
+    // setSession({ ...session, loginUser: null });
+    dispatch({ type: 'logout', payload: null });
   }, []);
 
   const login = useCallback((id: number, name: string) => {
-    setSession({ ...session, loginUser: { id, name } });
+    // setSession({ ...session, loginUser: { id, name } });
+    dispatch({ type: 'login', payload: { id, name } });
   }, []);
 
   const removeCartItem = useCallback((itemId: number) => {
-    setSession({
-      ...session,
-      cart: session.cart.filter((item) => item.id !== itemId),
-    });
+    // setSession({
+    //   ...session,
+    //   cart: session.cart.filter((item) => item.id !== itemId),
+    // });
+    dispatch({ type: 'removeCartItem', payload: itemId });
   }, []);
 
   const saveCartItem = useCallback(
     (id: number, name: string, price: number) => {
+      let payload;
       if (id !== 0) {
-        setSession({
-          ...session,
-          cart: [
-            ...session.cart.map((item) =>
-              item.id === id ? { id, name, price } : item
-            ),
-          ],
-        });
+        payload = [
+          ...session.cart.map((item) =>
+            item.id === id ? { id, name, price } : item
+          ),
+        ];
       } else {
         id = Math.max(...session.cart.map((item) => item.id), 0) + 1;
-        setSession({
-          ...session,
-          cart: [...session.cart, { id, name, price }],
-        });
+        payload = [...session.cart, { id, name, price }];
       }
+      dispatch({ type: 'saveCartItem', payload });
     },
-    []
+    [session]
   );
 
   return (

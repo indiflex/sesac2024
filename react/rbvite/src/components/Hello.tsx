@@ -16,9 +16,17 @@ export type Post = {
   body: string;
 };
 
+// const myReducer = (reducer: () => void, initArg: any, initializer) => {}
+
 export default function Hello({ name, children }: Props) {
   // const [x, setX] = useState(10);
-  const [x, plusX] = useReducer((preX) => preX + 1, 10);
+  // const [x, setX] = useState(() => 1 * 10);
+  // [1,2,3].reduce( (acc, pre) => acc + pre, 0)
+  const [x, plusX] = useReducer(
+    (preX) => preX + 1, // preX + 1 is acc(x)
+    1,
+    (arg: number) => arg * 10
+  ); // x is acc
   const { count: user } = useCounter();
   const [userId, setUserId] = useState('');
   // const [userInfo, setUserInfo] = useState<User>();
@@ -73,15 +81,26 @@ export default function Hello({ name, children }: Props) {
   const totArr = useMemo(() => array.reduce((acc, a) => acc + a, 0), []);
   // console.log('🚀  totArr:', totArr);
 
+  function innerHook(x: number) {
+    const [state, setState] = useState(x);
+    return [state, setState] as const; // tuple
+  }
+
+  const [ih, setIh] = innerHook(100);
+
   return (
     <>
       <h2>
-        Hello, {name} ({user}+{x}) : 게시글 수는 {postCnt} :: {totArr}
+        {ih} - Hello, {name} ({user}+{x}) : 게시글 수는 {postCnt} :: {totArr}
       </h2>
       {children}
       {/* <button onClick={() => setX(x => x + 1)} className='btn-primary'> */}
+      {/* <button onClick={plusX} className='btn-primary'> */}
       <button onClick={plusX} className='btn-primary'>
         XXX
+      </button>
+      <button onClick={() => setIh(1000)} className='btn-primary'>
+        YYY
       </button>
 
       <div className='mb-3 border p-3'>
