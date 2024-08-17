@@ -1,6 +1,6 @@
 import { forwardRef, useImperativeHandle, useRef } from 'react';
 import './App.css';
-import Hello from './components/Hello';
+import { MemoedHello } from './components/Hello';
 import My from './components/My';
 import { flushSync } from 'react-dom';
 import { LoginImperativeHandler } from './components/Login';
@@ -41,9 +41,9 @@ function App() {
         ChildFn
       </button>
 
-      <Hello name='Jade'>
+      <MemoedHello name='Jade'>
         <small>Hello Children</small>
-      </Hello>
+      </MemoedHello>
 
       <My loginFnRef={loginFnRef} />
 

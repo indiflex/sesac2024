@@ -12,6 +12,7 @@ import Profile from './Profile';
 import { FaCheck, FaPlus, FaRedo } from 'react-icons/fa';
 import { useSession } from '../hooks/session-context';
 import useFetch from '../hooks/fetch-hook';
+import clsx from 'clsx';
 
 type Props = {
   loginFnRef: RefObject<LoginImperativeHandler>;
@@ -36,7 +37,7 @@ export type User = {
 //     addBtnRef
 //   ) => {
 const My = ({ loginFnRef }: Props) => {
-  const { session, removeCartItem, saveCartItem } = useSession();
+  const { session, login, removeCartItem, saveCartItem } = useSession();
 
   // const [isEditing, setIsEditing] = useState(false);
   const [editingItem, setEditingItem] = useState<Item | null>(null);
@@ -197,7 +198,16 @@ const My = ({ loginFnRef }: Props) => {
       )}
 
       <hr />
-      {session.loginUser ? <Profile /> : <Login ref={loginFnRef} />}
+
+      <div
+        className={clsx('border-2', { 'border-green-700': !session.loginUser })}
+      >
+        {session.loginUser ? (
+          <Profile />
+        ) : (
+          <Login login={login} ref={loginFnRef} />
+        )}
+      </div>
     </div>
   );
 };

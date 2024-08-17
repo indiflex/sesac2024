@@ -1,18 +1,29 @@
-import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
+import {
+  forwardRef,
+  memo,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+} from 'react';
 import { useCounter } from '../hooks/counter-context';
-import { useSession } from '../hooks/session-context';
+// import { useSession } from '../hooks/session-context';
 import useTimer from '../hooks/timer-hook';
 
 export type LoginImperativeHandler = {
   focusName: () => void;
 };
 
-const Login = forwardRef((_, ref) => {
+type Props = {
+  login: (id: number, name: string) => void;
+};
+
+const Login = forwardRef(({ login }: Props, ref) => {
+  console.log('LOOOOOOOOGIN!!');
   // const [id, setId] = useState(0);
   // const [name, setName] = useState('');
   // console.log('id, name ==>', id, name);
 
-  const { login } = useSession();
+  // const { login } = useSession(); // for memo
 
   const idRef = useRef<HTMLInputElement>(null);
   const nameRef = useRef<HTMLInputElement>(null);
@@ -62,7 +73,7 @@ const Login = forwardRef((_, ref) => {
   // }, []);
 
   return (
-    <div className='border-2'>
+    <>
       <h1 className='text-2xl'>SignIn: {idRef.current?.value}</h1>
       <form onSubmit={submitHandle}>
         <input
@@ -101,8 +112,10 @@ const Login = forwardRef((_, ref) => {
           -
         </button>
       </div>
-    </div>
+    </>
   );
 });
 
-export default Login;
+const MemoedLogin = memo(Login, () => true);
+
+export default MemoedLogin;

@@ -1,7 +1,15 @@
-import { ReactNode, useEffect, useMemo, useReducer, useState } from 'react';
+import {
+  memo,
+  ReactNode,
+  useEffect,
+  useMemo,
+  useReducer,
+  useState,
+} from 'react';
 import { useCounter } from '../hooks/counter-context';
 import useFetch from '../hooks/fetch-hook';
 import { User } from './My';
+import LabelInput from './LabelInput';
 
 type Props = {
   name?: string;
@@ -16,9 +24,34 @@ export type Post = {
   body: string;
 };
 
-// const myReducer = (reducer: () => void, initArg: any, initializer) => {}
+function isFn(x: unknown): x is Function {
+  return typeof x === 'function';
+}
 
-export default function Hello({ name, children }: Props) {
+// const [s, set] = myState<S>(() => 1 * 100)
+// const [s, set] = myState<number>(0)
+// function myState<S, A = S, I = S>(init: I extends () => S ? () => S : S) {
+function myState<S, A = S | ((pre: S) => S)>(init: S | (() => S)) {
+  const reducer = (
+    pre: S,
+    action: A
+    // action: A extends (pre: S) => S ? (pre: S) => S : S
+  ) => (isFn(action) ? action(pre) : action) as S;
+  // ) => (typeof action === 'function' ? action(pre) : action) as S;
+
+  const initValue: S = isFn(init) ? init() : init;
+  // const initValue: S = typeof init === 'function' ? init() : init;
+  const [state, dispatch] = useReducer(reducer, initValue);
+
+  return [state, dispatch] as const;
+}
+// dispatch(count + 1); or dispatch(pre => pre + 1);
+// dispatch(action)
+
+// function myReducer<>()
+
+function Hello({ name, children }: Props) {
+  // console.log('HELLLOOOOOOOOOOOOOOOOOO!!');
   // const [x, setX] = useState(10);
   // const [x, setX] = useState(() => 1 * 10);
   // [1,2,3].reduce( (acc, pre) => acc + pre, 0)
@@ -28,7 +61,10 @@ export default function Hello({ name, children }: Props) {
     (arg: number) => arg * 10
   ); // x is acc
   const { count: user } = useCounter();
-  const [userId, setUserId] = useState('');
+  // const [userId, setUserId] = useState<string>(() => '');
+  // const [userId, setUserId] = myState('');
+  // const [userId, setUserId] = myState<string>(() => '');
+  const [userId, setUserId] = myState(() => '');
   // const [userInfo, setUserInfo] = useState<User>();
 
   // const [postCnt, setPostCnt] = useState();
@@ -104,12 +140,7 @@ export default function Hello({ name, children }: Props) {
       </button>
 
       <div className='mb-3 border p-3'>
-        <input
-          type='number'
-          onChange={(e) => setUserId(e.currentTarget.value)}
-          className='w-16'
-          placeholder='Id...'
-        />
+        <LabelInput label='User ID' type='number' className='w-24' />
         {!!userInfo && (
           <div>
             username: {userInfo?.username}, email: {userInfo?.email}
@@ -119,3 +150,11 @@ export default function Hello({ name, children }: Props) {
     </>
   );
 }
+
+const MemoedHello = memo(Hello, ({ name: a }, { name: b }) => {
+  console.log('🚀  a, b:', a, b, a === b);
+  return a === b;
+});
+
+// export default MemoedHello;
+export { Hello, MemoedHello };
