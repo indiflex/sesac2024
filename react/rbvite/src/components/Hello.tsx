@@ -48,7 +48,7 @@ function myState<S, A = S | ((pre: S) => S)>(init: S | (() => S)) {
 // dispatch(count + 1); or dispatch(pre => pre + 1);
 // dispatch(action)
 
-// function myReducer<>()
+// function myReducer(r: Reducer);
 
 function Hello({ name, children }: Props) {
   // console.log('HELLLOOOOOOOOOOOOOOOOOO!!');
@@ -140,7 +140,12 @@ function Hello({ name, children }: Props) {
       </button>
 
       <div className='mb-3 border p-3'>
-        <LabelInput label='User ID' type='number' className='w-24' />
+        <LabelInput
+          label='User ID'
+          type='number'
+          onChange={(e) => setUserId(e.currentTarget.value)}
+          className='w-24'
+        />
         {!!userInfo && (
           <div>
             username: {userInfo?.username}, email: {userInfo?.email}

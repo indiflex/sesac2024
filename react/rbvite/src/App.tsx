@@ -1,10 +1,9 @@
 import { forwardRef, useImperativeHandle, useRef } from 'react';
 import './App.css';
 import { MemoedHello } from './components/Hello';
-import My from './components/My';
 import { flushSync } from 'react-dom';
-import { LoginImperativeHandler } from './components/Login';
 import { useCounter } from './hooks/counter-context';
+import StateReduce from './components/StateReduce';
 
 // custom hook
 // const useCount = (initValue: number) => {
@@ -32,10 +31,10 @@ function App() {
   const { count, plusCount } = useCounter();
 
   const childFnRef = useRef<ChildHandler>(null);
-  const loginFnRef = useRef<LoginImperativeHandler>(null);
 
   return (
     <>
+      <StateReduce />
       <ChildComponent ref={childFnRef} age={count} />
       <button onClick={() => childFnRef.current?.f('XXX')} className='btn'>
         ChildFn
@@ -44,8 +43,6 @@ function App() {
       <MemoedHello name='Jade'>
         <small>Hello Children</small>
       </MemoedHello>
-
-      <My loginFnRef={loginFnRef} />
 
       <button
         onClick={() => {
