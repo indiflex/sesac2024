@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { Inter } from 'next/font/google';
 import './globals.css';
 
@@ -21,6 +22,7 @@ export default function RootLayout({
           <a href='/'>HOME</a>
           <a href='/about'>ABOUT</a>
           <a href='/hello'>HELLO</a>
+          <Link href='/todos'>Todos</Link>
         </nav>
         <div className='container mx-auto'>{children}</div>
         <footer>&copy; Senior Coding</footer>

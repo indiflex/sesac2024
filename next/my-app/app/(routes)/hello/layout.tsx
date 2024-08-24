@@ -7,6 +7,7 @@ import { ReactNode } from 'react';
 export default function HelloLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   console.log('🚀  pathname:', pathname);
+  throw new Error('xxxxxxxx');
   return (
     <>
       <nav className='flex justify-center gap-5'>
