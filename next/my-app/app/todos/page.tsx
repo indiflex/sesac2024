@@ -1,13 +1,19 @@
 'use client';
 
-import Link from 'next/link';
-import { useRef, useState, useTransition } from 'react';
+import Modal from '@/components/Modal';
+// import Link from 'next/link';
+import { useReducer, useRef, useState, useTransition } from 'react';
 import { getTodos, Todo } from '@/lib/todo';
+
+// function TodoModal(todo: Todo) {
+
+// }
 
 export default function Todos() {
   const [todos, setTodos] = useState<Todo[]>([]);
   const userIdRef = useRef<HTMLInputElement>(null);
   const [isPending, startTransition] = useTransition();
+  const [isShowModal, toggleModal] = useReducer((pre) => !pre, false);
 
   // useEffect(() => {
   //   if (userIdRef.current?.value) {
@@ -45,7 +51,10 @@ export default function Todos() {
           {todos.length ? (
             todos.map((todo) => (
               <li key={todo.id}>
-                <Link href={`/todos/${todo.id}`}>{todo.title}</Link>
+                {/* <Link href={`/todos/${todo.id}`}>{todo.title}</Link> */}
+                <button onClick={toggleModal} className='btn-primary'>
+                  {todo.title}
+                </button>
               </li>
             ))
           ) : (
@@ -54,6 +63,14 @@ export default function Todos() {
         </ul>
       ) : (
         <>Loading...</>
+      )}
+
+      {isShowModal && (
+        <Modal>
+          <div className='bg-white w-96 h-96 flex items-center justify-center rounded-md'>
+            Todo...
+          </div>
+        </Modal>
       )}
     </>
   );
