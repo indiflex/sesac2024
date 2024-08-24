@@ -23,6 +23,7 @@ export default function RootLayout({
           <a href='/about'>ABOUT</a>
           <a href='/hello'>HELLO</a>
           <Link href='/todos'>Todos</Link>
+          <Link href='/photos'>Photos</Link>
         </nav>
         <div className='container mx-auto'>{children}</div>
         <footer>&copy; Senior Coding</footer>

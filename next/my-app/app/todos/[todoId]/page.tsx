@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { getTodo, Todo } from '@/lib/todo';
+import { getTodo, Todo } from '@/lib/jsonplaceholder';
 
 export const revalidate = 10 * 1000;
 
@@ -15,12 +15,12 @@ export async function generateMetadata({
   };
 }
 
-export default async function Todo({ params }: Params) {
+export default async function TodoPage({ params }: Params) {
   const { todoId } = params;
 
   const todo = await getTodo(todoId);
   console.log('🚀  todo:', todo);
-  console.log('*******>>', process.env.DB_URL, process.env.DB_PASSWD)
+  console.log('*******>>', process.env.DB_URL, process.env.DB_PASSWD);
 
   if (!todo.id) notFound();
 
