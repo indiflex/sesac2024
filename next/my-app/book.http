@@ -1,0 +1,22 @@
+@url=http://localhost:3000
+
+## list
+GET {{url}}/api/books
+
+### 
+POST {{url}}/api/books
+
+{
+    "title": "sample",
+    "writer": "jade"
+}
+
+###
+PATCH {{url}}/api/books/3
+
+{
+    "title": "new title"
+}
+
+###
+DELETE {{url}}/api/books/1

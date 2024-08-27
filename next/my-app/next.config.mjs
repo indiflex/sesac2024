@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  experimental: {
+    missingSuspenseWithCSRBailout: false,
+  },
   env: {
     DB_URL: '211.233...',
   },

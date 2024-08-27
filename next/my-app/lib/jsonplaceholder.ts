@@ -28,11 +28,17 @@ export async function getTodos(userId: string) {
 }
 
 export async function getPhotos(albumId: string) {
-  const res = await fetch(`${URL}/albums/${albumId}/photos`);
-  const photos: Photo[] = await res.json();
-  // console.log('🚀  todos:', todos);
+  // const res = await fetch(`${URL}/albums/${albumId}/photos`);
+  // const photos: Photo[] = await res.json();
+  // // console.log('🚀  todos:', todos);
 
-  return photos;
+  // return photos;
+  return gets<Photo[]>(`albums/${albumId}/photos`);
+}
+
+export async function gets<T>(path: string): Promise<T> {
+  const res = await fetch(`${URL}/${path}`);
+  return res.json();
 }
 
 export async function get<T>(id: string, path: string) {
@@ -41,7 +47,7 @@ export async function get<T>(id: string, path: string) {
   });
   if (res.status === 404) throw new Error(`${id} is Not Found!`);
   const data: T = await res.json();
-  console.log('🚀  data:', data, path, id);
+  // console.log('🚀  data:', data, path, id);
   return data;
 }
 

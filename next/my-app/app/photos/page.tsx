@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import Link from 'next/link';
+// import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 // import Link from 'next/link';
 import { FormEvent, useEffect, useRef, useState, useTransition } from 'react';
@@ -13,21 +13,14 @@ export default function Photos() {
   const searchParams = new URLSearchParams(useSearchParams().toString());
 
   const albumId = searchParams.get('albumId');
+  const photoId = searchParams.get('photoId');
 
   const [photos, setPhotos] = useState<Photo[]>([]);
+  const [currPhotoId, setCurrPhotoId] = useState<string | number | null>(
+    photoId
+  );
   const albumIdRef = useRef<HTMLInputElement>(null);
   const [isPending, startTransition] = useTransition();
-
-  const goDetail = (photoId: number) => {
-    router.push(`${pathname}/${photoId}`);
-  };
-
-  const gets = (uid: string) => {
-    startTransition(async () => {
-      const data = await getPhotos(uid);
-      setPhotos(data);
-    });
-  };
 
   const setAlbumId = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -37,15 +30,44 @@ export default function Photos() {
     router.push(`${pathname}?albumId=${albumIdRef.current.value}`);
   };
 
+  const goPhoto = (photoId: number) => {
+    if (!albumIdRef.current || !albumIdRef.current.value) return;
+    // router.replace(
+    //   `/photos/${photoId}?albumId=${albumIdRef.current.value}&photoId=${photoId}`
+    // );
+    // router.push(
+    //   `/photos?albumId=${albumIdRef.current.value}&photoId=${photoId}`
+    // );
+
+    setCurrPhotoId(photoId);
+    router.push(
+      `/photos/${photoId}?albumId=${albumIdRef.current.value}&photoId=${photoId}`
+    );
+  };
+
+  // const goDetail = (photoId: number) => {
+  //   router.push(`${pathname}/${photoId}`);
+  // };
+
+  const gets = (uid: string) => {
+    startTransition(async () => {
+      const data = await getPhotos(uid);
+      setPhotos(data);
+    });
+  };
+
   useEffect(() => {
+    setCurrPhotoId(photoId);
     if (!albumIdRef.current || !albumId) return;
     albumIdRef.current.value = albumId;
     gets(albumId);
-  }, [albumId]);
+  }, [albumId, photoId]);
 
   return (
     <>
-      <h2 className='text-2xl'>Gallery: {photos?.length}</h2>
+      <h2 className='text-2xl'>
+        Gallery: {photos?.length} - {photoId}::{currPhotoId}
+      </h2>
 
       <form onSubmit={(e) => setAlbumId(e)}>
         <input ref={albumIdRef} type='number' className='border' />
@@ -56,14 +78,20 @@ export default function Photos() {
           {photos.length ? (
             photos.map(({ id, title, thumbnailUrl }) => (
               <div key={id}>
-                <Link href={`/photos/${id}`}>
+                {/* <Link href={`/photos/${id}`}> */}
+                <button
+                  onClick={() => goPhoto(id)}
+                  className={`${id == currPhotoId && 'border-2 border-blue-500'}`}
+                >
                   <Image
                     src={thumbnailUrl}
                     alt={title}
                     width={150}
                     height={150}
                   />
-                </Link>
+                  {id}
+                </button>
+                {/* </Link> */}
               </div>
             ))
           ) : (
