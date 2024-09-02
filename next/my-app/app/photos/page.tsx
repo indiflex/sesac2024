@@ -4,10 +4,25 @@ import Image from 'next/image';
 // import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 // import Link from 'next/link';
-import { FormEvent, useEffect, useRef, useState, useTransition } from 'react';
+import {
+  FormEvent,
+  Suspense,
+  useEffect,
+  useRef,
+  useState,
+  useTransition,
+} from 'react';
 import { getPhotos, Photo } from '@/lib/jsonplaceholder';
 
 export default function Photos() {
+  return (
+    <Suspense>
+      <PhotosInner />
+    </Suspense>
+  );
+}
+
+function PhotosInner() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = new URLSearchParams(useSearchParams().toString());

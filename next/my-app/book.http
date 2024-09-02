@@ -1,7 +1,12 @@
 @url=http://localhost:3000
 
-## list
+### list
 GET {{url}}/api/books
+
+### search with header
+GET {{url}}/api/books?q=1
+Authorization: Bearer xxxsdfdasfa
+user-agent: Sico
 
 ### 
 POST {{url}}/api/books
