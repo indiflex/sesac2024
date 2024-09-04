@@ -3,10 +3,9 @@
 ### list
 GET {{url}}/api/books
 
-### search with header
+### list
 GET {{url}}/api/books?q=1
-Authorization: Bearer xxxsdfdasfa
-user-agent: Sico
+Authorization:Bear xxx
 
 ### 
 POST {{url}}/api/books
