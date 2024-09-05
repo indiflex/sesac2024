@@ -1,10 +1,15 @@
 import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import Google from 'next-auth/providers/google';
+import { NextResponse } from 'next/server';
 import { z } from 'zod';
 
+// const getUser = async (email: string, passwd: string) => {
+//   console.log('🚀  email:', email, passwd);
+//   return null;
+// };
 const getUser = async (email: string, passwd: string) => ({
-  id: 1,
+  id: '1',
   name: 'HongKilDong',
   email,
   passwd,
@@ -17,7 +22,7 @@ export const {
   signOut,
 } = NextAuth({
   // pages: {
-  //   signIn: '/login'
+  //   signIn: '/login',
   // },
   providers: [
     Credentials({
@@ -47,7 +52,6 @@ export const {
         const { email, passwd } = parsedCredentials.data;
         console.log('🚀  email passwd:', email, passwd);
         const user = await getUser(email, passwd);
-        // if (!user || !(await compare(passwd, user.passwd))) return null;
         if (!user) return null;
         return user;
       },
@@ -55,40 +59,26 @@ export const {
     Google,
   ],
   callbacks: {
-    authorized({ auth, request: { nextUrl } }) {
-      const didLogin = !!auth?.user;
-      console.log('🚀  didLogin:', didLogin, nextUrl.pathname);
-
-      return true;
-
-      // if (nextUrl.pathname.startsWith('/about') && didLogin) {
-      //   return true;
-      // }
-
-      // let afterUrl = '/login';
-      // if (didLogin) afterUrl = '/about';
-
-      // console.log('***>>', nextUrl.pathname.startsWith(afterUrl));
-
-      // // if (!nextUrl.pathname.startsWith(afterUrl))
-      // //   return Response.redirect(new URL(afterUrl, nextUrl));
-
-      // return true;
-    },
     async signIn({ account, profile }) {
-      console.log(
-        '🚀  account:',
-        account,
-        profile,
-        account?.provider === 'credentials'
-      );
-      if (account?.provider === 'credentials') {
+      // account.provider = 'google' | 'credentials'
+
+      const { provider } = account!;
+      console.log('🚀  account:', account, profile, provider === 'credentials');
+      if (provider === 'credentials') {
+        // return true;
+        // return Response.redirect(new URL('/'));
+        // NextResponse.redirect(`${process.env.NEXTAUTH_URL}/`);
         return true;
       }
 
-      // const email = profile?.email;
-      // const name = profile?.name || '';
-      // if (email) {
+      // if google -> register if not exists
+      if (provider === 'google' && profile) {
+        const { name, email, picture } = profile;
+        console.log('🚀  google:', name, email, picture);
+
+        // ToDo regist..
+      }
+
       //   const user = await getUser(email);
       //   console.log('🚀 auth - user:', user);
       //   if (!user || !user.id) {

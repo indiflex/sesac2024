@@ -8,6 +8,18 @@ export async function logout() {
   await signOut();
 }
 
+export async function google() {
+  console.log('logout!!');
+  try {
+    await signIn('google');
+  } catch (error) {
+    if (error instanceof AuthError) {
+      console.log('error>>', error.type, error);
+    }
+    throw error;
+  }
+}
+
 export async function authenticate(
   prevState: string | undefined,
   formData: FormData
