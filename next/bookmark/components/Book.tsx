@@ -3,9 +3,14 @@ import { Button } from './ui/button';
 import Mark from './Mark';
 
 export default function Book() {
-  const marks = Array.from({ length: 16 }, (_, i) => ({
+  const marks = Array.from({ length: 3 }, (_, i) => ({
     id: i + 1,
-    title: 'xxx',
+    book: 0,
+    url: 'https://nextjs.com',
+    title: `MarkTitle ${i + 1}`,
+    image: i % 2 === 0 ? '/next.svg' : '/vercel.svg',
+    descript: '설명부분입니다!',
+    isdel: false,
   }));
   return (
     <div className='inline-flex h-full w-72 items-start rounded p-3 bg-slate-200'>
@@ -22,7 +27,7 @@ export default function Book() {
             <ul className='space-y-3'>
               {marks.map((mark) => (
                 <li key={mark.id}>
-                  <Mark />
+                  <Mark mark={mark} />
                 </li>
               ))}
             </ul>
