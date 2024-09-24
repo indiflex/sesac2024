@@ -1,7 +1,7 @@
 import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import Google from 'next-auth/providers/google';
-import { NextResponse } from 'next/server';
+import Github from 'next-auth/providers/github';
 import { z } from 'zod';
 
 // const getUser = async (email: string, passwd: string) => {
@@ -57,6 +57,7 @@ export const {
       },
     }),
     Google,
+    Github,
   ],
   callbacks: {
     async signIn({ account, profile }) {

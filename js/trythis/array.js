@@ -1,4 +1,5 @@
-const assert = require('assert');
+// const assert = require('assert');
+import assert from 'assert';
 
 const deleteArray = (arr, keyOrIndex, valOrIndex) => {
   console.log('🚀  keyOrIndex:', keyOrIndex, valOrIndex, arr[keyOrIndex]);
@@ -272,13 +273,18 @@ const keyPairOn_2 = (arr, n) => {
     }
 };
 
-const keyPair = (arr, n) => {
+const keyPair = (arr, n, keyfn = (val, n) => n - val) => {
   const val_idx = {}; // {key: index}
   for (let i = 0; i < arr.length; i += 1) {
     const val = arr[i];
     if (val_idx[val]) return [val_idx[val], i];
 
-    val_idx[n - val] ??= i;
+    // val + ? = n
+    // ? = n - 1
+    // fn = (val, n) => val + x === n
+    // fn(1, 7) ==> 6
+    val_idx[keyfn(val, n)] ??= i;
+    // val_idx[n - val] ??= i;
     // console.log('val_idx=', val_idx);
   }
 };
@@ -290,3 +296,30 @@ assert.deepStrictEqual(keyPair([1, 3, 4, 5], 7), [1, 2]);
 assert.deepStrictEqual(keyPair([1, 4, 45, 6, 10, 8], 16), [3, 4]);
 assert.deepStrictEqual(keyPair([1, 2, 4, 3, 6], 10), [2, 4]);
 assert.deepStrictEqual(keyPair([1, 2, 3, 4, 5, 7], 9), [3, 4]);
+
+const minusPairs = keyPair([1, 3, 3, 4, 5], 7);
+console.log('🚀  minusPairs:', minusPairs);
+
+function findPair(arr, fn) {
+  for (let i = 0; i < arr.length; i++) {
+    for (let j = i + 1; j < arr.length; j++) {
+      if (fn(arr[i], arr[j])) return [i, j];
+    }
+  }
+}
+const fpRet = findPair([1, 3, 3, 4, 5], (a, b) => a + b === 7);
+console.log('🚀  fpRet:', fpRet);
+
+Array.prototype.keyPair = function (fn) {
+  for (let i = 0; i < this.length; i++) {
+    for (let j = i + 1; j < this.length; j++) {
+      if (fn(this[i], this[j])) return [i, j];
+    }
+  }
+};
+const xx = [1, 3, 3, 4, 5].keyPair((a, b) => a + b === 7);
+console.log('🚀  xx:', xx);
+
+// [1, 2, 4, 3, 6].findPair((a, b) =>
+//    Math.abs((a.age + b.age) / 2) < 5);
+// // console.log([1, 2, 4, 3, 6].find((a, i) => a > 4));

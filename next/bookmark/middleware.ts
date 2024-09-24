@@ -4,21 +4,21 @@ import { auth } from './lib/auth';
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  console.log('🚀  pathname:', pathname);
-
   const session = await auth();
+  console.log('🚀  pathname:', pathname, session?.user?.name);
   // const isLoginPath = pathname.startsWith('/login');
   // if (isLoginPath && session) {
   //   return NextResponse.redirect(`${process.env.NEXTAUTH_URL}/`);
   // }
 
   if (!session)
-    return NextResponse.redirect(`${process.env.NEXTAUTH_URL}/login`); //api/auth/login
+    return NextResponse.redirect(`${process.env.NEXTAUTH_URL}/api/auth/signin`);
+
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ['/', '/settings/:path*', '/about', '/login'],
+  matcher: ['/', '/settings/:path*', '/about'],
 };
 
 // import { auth } from './lib/auth';
