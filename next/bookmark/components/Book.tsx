@@ -2,7 +2,7 @@
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import { Button } from './ui/button';
 import Mark from './Mark';
-import { PlusIcon } from 'lucide-react';
+import { PlusIcon, RedoIcon, SaveIcon } from 'lucide-react';
 import { useReducer } from 'react';
 import { Label } from '@radix-ui/react-label';
 import { Input } from './ui/input';
@@ -29,29 +29,29 @@ export default function Book() {
         </button>
       </div>
 
-      <form className='border border-red-300 m-3 p-3 rounded-md'>
+      <form className='border-2 border-slate-500 mx-3 mb-3 p-3 rounded-md'>
         <Input
           id='bookname'
           type='text'
           defaultValue='Book Title'
           placeholder='Bookname...'
         />
-        <div className='flex items-center justify-between'>
+        <div className='flex items-center justify-between mt-2'>
           <Label
             htmlFor='delWhenOpen'
             className='mr-1 cursor-pointer hover:bg-white/10'
           >
             <Checkbox id='delWhenOpen' className='mr-2' />
-            ClickDel
+            Del.when.Open
           </Label>
-          <Button
-            variant='outline'
-            // disabled={isScraping}
-            className='text-green-500'
-          >
-            {/* {isScraping ? <Loader className='animate-spin' /> : <CloudCog />} */}
-            aaa
-          </Button>
+          <div className='flex'>
+            <button className='grid place-content-center rounded-md text-gray-600 hover:text-black hover:bg-gray-100 px-2 py-1'>
+              <RedoIcon className='w-4 h-4 hover:text-slate-500' />
+            </button>
+            <button className='grid place-content-center rounded-md text-gray-600 hover:text-black hover:bg-gray-100 px-2 py-1'>
+              <SaveIcon className='w-4 h-4 hover:text-blue-500' />
+            </button>
+          </div>
         </div>
       </form>
 
