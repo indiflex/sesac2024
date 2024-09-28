@@ -14,16 +14,18 @@ const config = {
   database,
 };
 
-export const query = async (sql: string, params: unknown[]) => {
+export const query = async <T>(sql: string, params: unknown[]) => {
+  console.log('🚀  query:', sql, params);
   const conn = await mysql.createConnection(config);
 
   try {
     // const [results, fields] = await conn.execute(sql, params);
     const [results] = await conn.execute(sql, params);
 
-    return results;
+    return results as T[];
   } catch (error) {
   } finally {
     conn.destroy();
+    // conn.end();
   }
 };

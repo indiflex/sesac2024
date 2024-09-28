@@ -2,8 +2,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import Nav from '@/components/Nav';
-import { BookAIcon, BookmarkIcon } from 'lucide-react';
-import { BookmarkFilledIcon } from '@radix-ui/react-icons';
+import { BookmarkIcon } from 'lucide-react';
 import Link from 'next/link';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -21,7 +20,7 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body className={inter.className}>
-        <div className='flex flex-col h-screen bg-slate-600'>
+        <div className='flex flex-col h-screen bg-purple-600'>
           <header className='shrink-0 flex justify-between bg-white p-2'>
             <Link
               href='/'

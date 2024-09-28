@@ -7,7 +7,7 @@ export default async function Nav() {
   const session = await auth();
   // const session = { user: { name: 'Kim', image: '/next.svg' } }
   const user = session?.user;
-  console.log('🚀  session:', user);
+  // console.log('🚀  session:', user);
 
   return (
     <nav className='flex items-center justify-between p-3 h-[5vh]'>
@@ -21,7 +21,7 @@ export default async function Nav() {
         </Link>
 
         {user ? (
-          <Link href='/about' className='hover:shadow-lg'>
+          <Link href='/about' className='hover:shadow-lg hover:rounded-full'>
             <img
               src={user.image || '/next.svg'}
               alt={user.name!}
