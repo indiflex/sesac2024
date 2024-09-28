@@ -1,3 +1,4 @@
+'use client';
 import { useEffect, useState } from 'react';
 
 const ABORT_REASON = 'My useFetch Clean-up!';
