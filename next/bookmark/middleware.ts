@@ -20,6 +20,9 @@ export async function middleware(req: NextRequest) {
 export const config = {
   matcher: ['/', '/settings/:path*', '/about'],
 };
+// export const config = {
+//   matcher: ['/((?!api|_next/static|_next/image|favicon.ico|.*\\.png$).*)'],
+// };
 
 // import { auth } from './lib/auth';
 
